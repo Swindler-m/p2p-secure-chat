@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -9,6 +10,8 @@ public class ChatServer {
             System.out.println("Server has been started. Waiting for a client on port " + port + "...");
             Socket clientSocket = serverSocket.accept();
             System.out.println("Client connected!");
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
+            out.println("Welcome to the 1453 Server");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
