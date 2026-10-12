@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,7 +14,33 @@ public class ChatServer {
             Socket clientSocket = serverSocket.accept();
             System.out.println("Client connected!");
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),true);
+            BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out.println("Welcome to the 1453 Server");
+            new Thread(()->{
+                try {
+                while(true){
+                    String incomingMessage = in.readLine();
+                    if (incomingMessage == null){
+                        System.out.println("The other side was disconnected. The chat was ended!");
+                        clientSocket.close();
+                        break;
+                    }
+                    System.out.println("Client: " + incomingMessage);
+                }
+                }catch (IOException e){
+                    System.out.println("Client connection was lost");
+                }
+            }).start();
+            while (true){
+                String CusersMessage = keyboard.readLine();
+                if (CusersMessage.equalsIgnoreCase("cikis")){
+                    System.out.println("The conversation has ended. See you later! ");
+                    clientSocket.close();
+                    break;
+                }
+                out.println(CusersMessage);
+            }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
