@@ -17,6 +17,8 @@ public class ChatClient {
             PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
             String serverMessage = in.readLine();
             System.out.println("Server says: " + serverMessage);
+            System.out.println("Please enter a user nickname: ");
+            String nickname =keyboard.readLine();
             new Thread(() ->{
                 try {
                     while (true){
@@ -25,7 +27,7 @@ public class ChatClient {
                             System.out.println("The other side was disconnected. The chat was ended!");
                             break;
                         }
-                        System.out.println("Server: " + incomingMessage);
+                        System.out.println(incomingMessage);
                     }
                 }catch (IOException e){
                     System.out.println("Server connection was lost!");
@@ -38,7 +40,10 @@ public class ChatClient {
                     System.out.println("The conversation has ended. See you later! ");
                     socket.close();
                break;}
-                out.println(usersMessage);
+                if (usersMessage.trim().isEmpty()){
+                    continue;
+                }
+                out.println(nickname + ": " + usersMessage);
             }
         }catch (Exception e){
             System.out.println("Connection failed: " + e.getMessage());

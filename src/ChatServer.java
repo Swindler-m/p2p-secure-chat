@@ -17,6 +17,8 @@ public class ChatServer {
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out.println("Welcome to the 1453 Server");
+            System.out.println("Please enter a user nickname: ");
+            String nickname =keyboard.readLine();
             new Thread(()->{
                 try {
                 while(true){
@@ -26,7 +28,7 @@ public class ChatServer {
                         clientSocket.close();
                         break;
                     }
-                    System.out.println("Client: " + incomingMessage);
+                    System.out.println(incomingMessage);
                 }
                 }catch (IOException e){
                     System.out.println("Client connection was lost");
@@ -39,7 +41,10 @@ public class ChatServer {
                     clientSocket.close();
                     break;
                 }
-                out.println(CusersMessage);
+                if (CusersMessage.trim().isEmpty()){
+                    continue;
+                }
+                out.println(nickname + ": " + CusersMessage );
             }
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
